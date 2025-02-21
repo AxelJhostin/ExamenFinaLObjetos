@@ -1,13 +1,13 @@
 package ec.webmarket.restful.api.v1;
 
-import ec.webmarket.restful.dto.v1.PacienteDTO;
-import ec.webmarket.restful.security.ApiResponseDTO;
+import ec.webmarket.restful.domain.Paciente;
+import ec.webmarket.restful.dto.v1.ApiResponseDTO;
 import ec.webmarket.restful.service.crud.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1.0/pacientes")
@@ -16,24 +16,20 @@ public class PacienteController {
     @Autowired
     private PacienteService pacienteService;
 
-    @PostMapping
-    public ResponseEntity<?> createPaciente(@RequestBody PacienteDTO pacienteDTO) {
-        return ResponseEntity.ok(new ApiResponseDTO<>(true, pacienteService.create(pacienteDTO)));
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponseDTO<Paciente>> registerPaciente(@RequestBody Paciente paciente) {
+        Paciente nuevoPaciente = pacienteService.register(paciente);
+        return ResponseEntity.ok(new ApiResponseDTO<>(true, nuevoPaciente));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllPacientes() {
-        return ResponseEntity.ok(new ApiResponseDTO<>(true, pacienteService.findAll()));
-    }
+    @GetMapping("/{cedula}")
+    public ResponseEntity<ApiResponseDTO<Paciente>> getPacientePorCedula(@PathVariable String cedula) {
+        Optional<Paciente> pacienteOpt = pacienteService.getPacienteByCedula(cedula);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updatePaciente(@PathVariable Long id, @RequestBody PacienteDTO pacienteDTO) {
-        return ResponseEntity.ok(new ApiResponseDTO<>(true, pacienteService.update(id, pacienteDTO)));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePaciente(@PathVariable Long id) {
-        pacienteService.delete(id);
-        return ResponseEntity.ok(new ApiResponseDTO<>(true, "Paciente eliminado correctamente"));
+        return pacienteOpt.map(paciente -> 
+            ResponseEntity.ok(new ApiResponseDTO<>(true, paciente))
+        ).orElseGet(() -> 
+            ResponseEntity.status(404).body(new ApiResponseDTO<>(false, "Paciente no encontrado"))
+        );
     }
 }

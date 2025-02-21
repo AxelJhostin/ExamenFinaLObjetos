@@ -1,16 +1,15 @@
 package ec.webmarket.restful.dto.v1;
 
-import lombok.Data;
-import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class PacienteDTO {
-    private Long id;
     private String nombre;
     private String apellido;
     private String cedula;
     private String email;
     private String telefono;
-    private LocalDate fechaNacimiento;
     private String direccionResidencia;
 }

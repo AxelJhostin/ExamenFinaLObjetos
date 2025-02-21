@@ -5,10 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Configuración de seguridad para permitir todas las solicitudes sin autenticación.
- * Esto es solo para pruebas y desarrollo.
- */
 @Configuration
 public class SecurityConfig {
 
@@ -17,7 +13,8 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())  // 🔹 Deshabilita CSRF para permitir `POST`
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1.0/usuarios/register").permitAll() // 🔹 Permitir el registro sin autenticación
+                .requestMatchers("/api/v1.0/usuarios/register").permitAll()
+                .requestMatchers("/api/v1.0/dentistas/register").permitAll() // 🔹 Permitir registro de dentistas
                 .anyRequest().permitAll()
             );
 
