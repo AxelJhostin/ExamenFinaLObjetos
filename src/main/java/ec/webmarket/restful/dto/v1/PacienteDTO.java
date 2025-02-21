@@ -11,7 +11,6 @@ public class PacienteDTO {
     private String cedula;
     private String email;
     private String telefono;
-    private LocalDate fechaRegistro;
     private LocalDate fechaNacimiento;
     private String direccionResidencia;
 }

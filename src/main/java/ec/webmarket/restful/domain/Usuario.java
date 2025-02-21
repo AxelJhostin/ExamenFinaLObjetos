@@ -1,15 +1,11 @@
 package ec.webmarket.restful.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.Data;
 
-@Getter
-@Setter
 @Entity
+@Data
 public class Usuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,17 +14,10 @@ public class Usuario {
     private String nombreUsuario;
 
     @Column(nullable = false)
-    private String clave;
+    private String clave; // 🔹 Sin cifrar, como lo pediste
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Rol tipoUsuario;
 
-    public enum Rol {
-        PACIENTE, ODONTOLOGO
-    }
-
-    public void setClave(String clave) {
-        this.clave = new BCryptPasswordEncoder().encode(clave);
-    }
+    public enum Rol { ODONTOLOGO, PACIENTE }
 }
